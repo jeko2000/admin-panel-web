@@ -28,6 +28,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { LoginRendition } from "../types/renditions";
 
 export default defineComponent({
   name: 'LoginForm',
@@ -45,34 +46,12 @@ export default defineComponent({
   },
   methods: {
     onLogin(): void {
-      this.$emit('login', this.email, this.password);
+      const loginRendition: LoginRendition = {
+        email: this.email,
+        password: this.password
+      }
+      this.$emit('login', loginRendition);
     }
   }
 });
 </script>
-
-<style scoped>
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-input,
-textarea {
-    display: block;
-    width: 100%;
-    font: inherit;
-    padding: 0.15rem;
-    border: 1px solid #ccc;
-}
-
-input:focus,
-textarea:focus {
-    outline: none;
-}
-
-.form-control {
-    margin: 1rem 0;
-}
-</style>

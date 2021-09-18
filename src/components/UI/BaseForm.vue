@@ -21,7 +21,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
 label {
     font-weight: bold;
     display: block;

@@ -1,19 +1,26 @@
 <template>
-<LoginForm @login="onLogin"></LoginForm>
+<LoginForm @login="onLogin" />
+<RegistrationForm @register="onRegister"/>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import LoginForm from './components/LoginForm.vue';
+import RegistrationForm from './components/RegistrationForm.vue';
+import { LoginRendition, RegistrationRendition } from "./types/renditions";
 
 export default defineComponent({
   name: 'App',
   components: {
-    LoginForm
+    LoginForm,
+    RegistrationForm
   },
   methods: {
-    onLogin(email: string, password: string) {
-      console.log(`Logged in as ${email} and ${password}`);
+    onLogin(loginRendition: LoginRendition): void {
+      console.log(`Received login rendition: ${JSON.stringify(loginRendition)}`);
+    },
+    onRegister(registrationRendition: RegistrationRendition): void {
+      console.log(`Received registration rendition: ${JSON.stringify(registrationRendition)}`);
     }
   }
 });
