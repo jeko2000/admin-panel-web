@@ -1,27 +1,21 @@
 <template>
-<LoginForm @login="onLogin" />
-<RegistrationForm @register="onRegister"/>
+<the-header></the-header>
+<router-view></router-view>
+<the-footer></the-footer>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import LoginForm from './components/LoginForm.vue';
-import RegistrationForm from './components/RegistrationForm.vue';
-import { LoginRendition, RegistrationRendition } from "./types/renditions";
+import { defineComponent } from 'vue';
+import TheHeader from './components/layout/TheHeader.vue';
+import TheFooter from './components/layout/TheFooter.vue';
+import { RouterView } from 'vue-router';
 
 export default defineComponent({
   name: 'App',
   components: {
-    LoginForm,
-    RegistrationForm
-  },
-  methods: {
-    onLogin(loginRendition: LoginRendition): void {
-      console.log(`Received login rendition: ${JSON.stringify(loginRendition)}`);
-    },
-    onRegister(registrationRendition: RegistrationRendition): void {
-      console.log(`Received registration rendition: ${JSON.stringify(registrationRendition)}`);
-    }
+    RouterView,
+    TheFooter,
+    TheHeader
   }
 });
 </script>

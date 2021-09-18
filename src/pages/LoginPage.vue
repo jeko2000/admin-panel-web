@@ -31,7 +31,7 @@ import { defineComponent } from "vue";
 import { LoginRendition } from "../types/renditions";
 
 export default defineComponent({
-  name: 'LoginForm',
+  name: 'LoginPage',
   data() {
     return {
       email: '',

@@ -58,7 +58,7 @@ import { defineComponent } from "vue";
 import { RegistrationRendition } from "../types/renditions";
 
 export default defineComponent({
-  name: 'RegistrationForm',
+  name: 'RegistrationPage',
   data() {
     return {
       firstName: '',
