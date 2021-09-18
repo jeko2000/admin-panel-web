@@ -1,0 +1,6 @@
+* Admin panel web
+  This is a small, self-contained web application for experimentation.
+
+See related projects:
+ + [[https://github.com/jeko2000/admin-panel-server][admin-panel-server]]
+ + [[https://github.com/jeko2000/admin-panel-db][admin-panel-db]]
