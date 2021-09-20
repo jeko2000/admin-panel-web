@@ -1,4 +1,5 @@
 <template>
+<h3 v-if="error">{{error}}</h3>
 <announcement-summaries
   :announcements="announcements"
 ></announcement-summaries>
@@ -8,6 +9,9 @@
 import { defineComponent } from "vue";
 import AnnouncementSummaries from '@/components/AnnouncementSummaries.vue';
 import { Announcement } from '@/types/models';
+import announcementService from "@/services/announcementService";
+import {pipe} from 'fp-ts/function';
+import * as TE from 'fp-ts/TaskEither';
 
 export default defineComponent({
   name: 'HomePage',
@@ -16,23 +20,38 @@ export default defineComponent({
   },
   data() {
     return {
-      announcements: [
-        {
-          id: '10',
-          author: 'Johnny',
-          title: 'Sample title',
-          content: 'Massa, eget egestas purus viverra accumsan in nisl nisi, scelerisque eu ultrices vitae, auctor eu augue ut. Sodales ut etiam sit amet nisl purus, in mollis nunc sed id semper.',
-          createdAt: new Date("2019-01-16")
-        },
-        {
-          id: '12',
-          author: 'Shelly',
-          title: 'Another title',
-          content: 'Sem fringilla ut morbi tincidunt. Ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate enim nulla aliquet porttitor lacus, luctus accumsan tortor posuere ac ut consequat.',
-          createdAt: new Date("2019-03-16")
-        }
-      ] as Announcement[]
+      announcements: [] as Announcement[],
+      error: ''
     }
+  },
+  methods: {
+    setAnnouncements(announcements: Announcement[]): void {
+      this.announcements = announcements;
+    },
+    setError(error: Error): void {
+      this.error = error.message;
+    },
+    loadAnnouncements(): Promise<void> {
+      return pipe(
+        announcementService.getAll(),
+        TE.matchW(this.setError, this.setAnnouncements),
+        invoke => invoke()
+      )
+    }
+  },
+  created(): Promise<void> {
+    return pipe(
+      announcementService.getAll(),
+      TE.matchW(
+        e => {
+          this.error = e.message;
+        },
+        announcements => {
+          this.announcements = announcements
+        }
+      ),
+      invoke => invoke()
+    )
   }
 });
 </script>
