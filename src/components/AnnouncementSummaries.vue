@@ -16,14 +16,14 @@ import AnnouncementSummary from './AnnouncementSummary.vue';
 
 export default defineComponent({
   name: 'AnnouncementSummaries',
+  components: {
+    AnnouncementSummary
+  },
   props: {
     announcements: {
       type: Object as PropType<Announcement[]>,
       required: true
     }
-  },
-  components: {
-    AnnouncementSummary
   }
 });
 </script>

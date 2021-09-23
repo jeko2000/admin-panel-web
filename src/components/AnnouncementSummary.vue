@@ -15,7 +15,6 @@ import { formatDate, truncate } from '../util/stringUtil';
 
 export default defineComponent({
   name: 'AnnouncementSummary',
-  inject: ['announcement'],
   props: {
     announcement: {
       type: Object as PropType<Announcement>,

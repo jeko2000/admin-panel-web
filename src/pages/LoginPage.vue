@@ -27,31 +27,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { LoginRendition } from "../types/renditions";
+import { computed, defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: 'LoginPage',
-  data() {
-    return {
-      email: '',
-      password: ''
+  setup() {
+    const router = useRouter();
+    const email = ref('');
+    const password = ref('');
+    const disableButton = computed(() => !email.value || !password.value)
+
+    function onLogin(): void {
+      router.push('/');
     }
-  },
-  emits: ['login'],
-  computed: {
-    disableButton(): boolean {
-      return !this.email || !this.password
-    }
-  },
-  methods: {
-    onLogin(): void {
-      const loginRendition: LoginRendition = {
-        email: this.email,
-        password: this.password
-      }
-      this.$emit('login', loginRendition);
-    }
+
+    return { email, password, disableButton, onLogin };
   }
 });
 </script>

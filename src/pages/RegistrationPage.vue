@@ -54,39 +54,47 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { RegistrationRendition } from "../types/renditions";
+import { RegistrationRendition } from "@/types/renditions";
+import { computed, defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: 'RegistrationPage',
-  data() {
-    return {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      passwordConfirmation: ''
-    }
-  },
-  emits: ['register'],
-  computed: {
-    disableButton(): boolean {
-      return !(this.firstName
-        && this.lastName
-        && this.email
-        && this.password
-        && this.password === this.passwordConfirmation)
-    }
-  },
-  methods: {
-    onSubmit(): void {
+  setup() {
+    const router = useRouter();
+    const firstName = ref('');
+    const lastName = ref('');
+    const email = ref('');
+    const password = ref('');
+    const passwordConfirmation = ref('');
+
+    const disableButton = computed(() => {
+      return !(firstName.value
+        && lastName.value
+        && email.value
+        && password.value
+        && password.value === passwordConfirmation.value)
+    });
+
+    function onSubmit(): void {
       const rendition: RegistrationRendition = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        password: this.password
+        firstName:  firstName.value,
+        lastName:  lastName.value,
+        email:  email.value,
+        password:  password.value
       }
-      this.$emit('register', rendition);
+      console.log(rendition)
+      router.push('/');
+    }
+
+    return {
+      firstName,
+      lastName,
+      email,
+      password,
+      passwordConfirmation,
+      disableButton,
+      onSubmit
     }
   }
 });

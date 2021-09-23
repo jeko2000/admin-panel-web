@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, Ref, ref } from "vue";
 import AnnouncementSummaries from '@/components/AnnouncementSummaries.vue';
 import { Announcement } from '@/types/models';
 import announcementService from "@/services/announcementService";
@@ -18,40 +18,21 @@ export default defineComponent({
   components: {
     AnnouncementSummaries
   },
-  data() {
-    return {
-      announcements: [] as Announcement[],
-      error: ''
-    }
-  },
-  methods: {
-    setAnnouncements(announcements: Announcement[]): void {
-      this.announcements = announcements;
-    },
-    setError(error: Error): void {
-      this.error = error.message;
-    },
-    loadAnnouncements(): Promise<void> {
+  setup(){
+    const announcements: Ref<Announcement[]> = ref([]);
+    const error = ref('');
+
+    onMounted(() => {
       return pipe(
         announcementService.getAll(),
-        TE.matchW(this.setError, this.setAnnouncements),
+        TE.matchW(
+          e => error.value = e.message,
+          a => announcements.value = a),
         invoke => invoke()
       )
-    }
-  },
-  created(): Promise<void> {
-    return pipe(
-      announcementService.getAll(),
-      TE.matchW(
-        e => {
-          this.error = e.message;
-        },
-        announcements => {
-          this.announcements = announcements
-        }
-      ),
-      invoke => invoke()
-    )
+    });
+
+    return { announcements, error };
   }
 });
 </script>
