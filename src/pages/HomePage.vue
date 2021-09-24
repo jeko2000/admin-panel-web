@@ -1,17 +1,15 @@
 <template>
-<h3 v-if="error">{{error}}</h3>
+<h3 v-if="error">{{ formattedError }}</h3>
 <announcement-summaries
   :announcements="announcements"
 ></announcement-summaries>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, Ref, ref } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import AnnouncementSummaries from '@/components/AnnouncementSummaries.vue';
-import { Announcement } from '@/types/models';
-import announcementService from "@/services/announcementService";
-import {pipe} from 'fp-ts/function';
-import * as TE from 'fp-ts/TaskEither';
+import { useStore } from "@/store";
+import { ActionType } from "@/store/actions";
 
 export default defineComponent({
   name: 'HomePage',
@@ -19,20 +17,12 @@ export default defineComponent({
     AnnouncementSummaries
   },
   setup(){
-    const announcements: Ref<Announcement[]> = ref([]);
-    const error = ref('');
-
-    onMounted(() => {
-      return pipe(
-        announcementService.getAll(),
-        TE.matchW(
-          e => error.value = e.message,
-          a => announcements.value = a),
-        invoke => invoke()
-      )
-    });
-
-    return { announcements, error };
+    const store = useStore()
+    const announcements = computed(() => store.state.announcements)
+    const error = computed(() => store.state.error)
+    const formattedError = computed(() => store.getters.formattedError);
+    onMounted(() => store.dispatch(ActionType.LOAD_ANNOUNCEMENTS));
+    return { announcements, store, error, formattedError };
   }
 });
 </script>
