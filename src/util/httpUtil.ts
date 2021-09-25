@@ -1,5 +1,5 @@
 import * as TE from 'fp-ts/TaskEither'
-import * as t from 'io-ts'
+import * as D from 'io-ts/Decoder'
 import { DecodeError, ServerError, ServerResponseError } from "@/types/errors";
 import { Either, left, right } from "fp-ts/Either";
 import { none, Option, some } from "fp-ts/Option";
@@ -12,34 +12,34 @@ export function ensureHttpStatus(status: number): (response: Response) => Either
     left(new ServerResponseError(`Expected ${status} and got ${response.status}`, response))
 }
 
-export function decodeResponseTo<A,O>(type: t.Type<A, O>): (response: Response) => TE.TaskEither<DecodeError, A> {
+export function decodeResponseTo<I,A>(decoder: D.Decoder<I, A>): (response: Response) => TE.TaskEither<DecodeError, A> {
   return (response: Response) => pipe(
     TE.tryCatch(
       () => response.json(),
       () => new DecodeError(`Unable to decode text from response`)
     ),
-    TE.chainEitherK(decodeTo(type))
+    TE.chainEitherK(decodeTo(decoder))
   )
 }
 
-export function decodeArrayInResponseKey<A, O>(type: t.Type<A, O>, key: string): (response: Response) => TE.TaskEither<DecodeError, A[]> {
+export function decodeArrayInResponseKey<A>(decoder: D.Decoder<unknown, A>, key: string): (response: Response) => TE.TaskEither<DecodeError, A[]> {
   return (response: Response) => pipe(
     TE.tryCatch(
       () => response.json(),
       () => new DecodeError(`Unable to decode Json from response`)
     ),
     TE.map(a => a[key]),
-    TE.chainEitherK(decodeTo(t.array(type)))
+    TE.chainEitherK(decodeTo(D.array(decoder)))
   )
 }
 
-export function decodeResponseToOptionOf<A, O>(type: t.Type<A, O>): (response: Response) => TE.TaskEither<DecodeError, Option<A>> {
+export function decodeResponseToOptionOf<A>(decoder: D.Decoder<unknown, A>): (response: Response) => TE.TaskEither<DecodeError, Option<A>> {
   return (response: Response) => {
     if (response.status === 404) {
       return TE.right(none)
     }
     return pipe(
-      decodeResponseTo(type)(response),
+      decodeResponseTo(decoder)(response),
       TE.map(some)
     )
   }

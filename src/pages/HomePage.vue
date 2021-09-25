@@ -1,20 +1,20 @@
 <template>
 <h3 v-if="error">{{ formattedError }}</h3>
-<announcement-summaries
+<announcement-summary-list
   :announcements="announcements"
-></announcement-summaries>
+></announcement-summary-list>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onMounted } from "vue";
-import AnnouncementSummaries from '@/components/AnnouncementSummaries.vue';
+import AnnouncementSummaryList from '@/components/AnnouncementSummaryList.vue';
 import { useStore } from "@/store";
 import { ActionType } from "@/store/actions";
 
 export default defineComponent({
   name: 'HomePage',
   components: {
-    AnnouncementSummaries
+    AnnouncementSummaryList
   },
   setup(){
     const store = useStore()
