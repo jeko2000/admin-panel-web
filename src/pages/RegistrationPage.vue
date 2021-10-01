@@ -54,7 +54,6 @@
 </template>
 
 <script lang="ts">
-import { RegistrationRendition } from "@/types/renditions";
 import { computed, defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -77,7 +76,7 @@ export default defineComponent({
     });
 
     function onSubmit(): void {
-      const rendition: RegistrationRendition = {
+      const rendition = {
         firstName:  firstName.value,
         lastName:  lastName.value,
         email:  email.value,
