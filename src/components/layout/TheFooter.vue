@@ -1,6 +1,10 @@
 <template>
-<h2>FOOTER</h2>
-<h4>{{ version }}</h4>
+<footer class="text-center text-muted bg-dark">
+  <div class="p-4">
+    <base-router-link class="text-muted text-decoration-none" to="/">APanel v{{ version }}</base-router-link>
+  </div>
+</footer>
+
 </template>
 
 <script lang="ts">
